@@ -6,6 +6,7 @@ import {
     TouchableOpacity
 } from "react-native";
 import { colors, fontSizes, icons } from "../constants";
+import { Spacing } from "../utilies/Device";
 
 function UIHeader(props) {
     const {
@@ -13,20 +14,22 @@ function UIHeader(props) {
         rightIconName,
         onPressLeftIcon
     } = props
+    const { navigate, goBack } = props.navigation
     return <View style={{
         height: 55,
         backgroundColor: "white",
         flexDirection: "row",
-        justifyContent: "space-between",
+        // justifyContent: "space-between",
         alignItems: "center", 
-        elevation: 5
+        // marginBottom: Spacing 
+        // elevation: 5
     }}>
         <TouchableOpacity 
-            onPress={onPressLeftIcon}>
+            onPress={() => goBack()}>
             <Image 
-                source={icons.navigationline}
+                source={icons.back}
                 style={{
-                    width: 36, height: 36,
+                    width: Spacing * 2, height: Spacing * 2,
                     tintColor: colors.main,
                     margin: 10
                 }}
@@ -39,6 +42,7 @@ function UIHeader(props) {
             lineHeight: 45,
             color: colors.main,
             fontFamily: 'Poppins-Medium',
+            marginLeft: Spacing / 2
         }}>{title}</Text>
         
         {rightIconName != undefined ? <Image source={rightIconName}

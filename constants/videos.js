@@ -1,3 +1,3 @@
 export default{
-    communicateSignLanguage: require('../assets/CommunicateSignLanguage.mp4')
+    // communicateSignLanguage: require('../assets/CommunicateSignLanguage.mp4')
 }

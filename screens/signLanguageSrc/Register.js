@@ -15,11 +15,15 @@ import { images, colors, icons, fontSizes } from '../../constants'
 import { screenHeight, screenWidth, Spacing } from '../../utilies/Device';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { isValidEmail } from '../../utilies/Validations'
+import { auth,
+         firebaseDatabase, 
+         createUserWithEmailAndPassword
+        } from '../../config';     
 
 function Register(props) {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
+    const [email, setEmail] = useState('thaonguyenvy109@gmail.com')
+    const [password, setPassword] = useState('123456')
+    const [confirmPassword, setConfirmPassword] = useState('123456')
     
     const [errorEmail, setErrorEmail] = useState(' ')
     const [showPassword, setShowPassword] = useState(false)
@@ -38,6 +42,7 @@ function Register(props) {
 
     const { navigation, route } = props
     const { navigate, goBack } = navigation
+
     return <KeyboardAvoidingView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ flex: 1 }} bounces={false}>
             <SafeAreaView style={{
@@ -83,7 +88,7 @@ function Register(props) {
                                     color: colors.main,
                                     fontFamily: 'Poppins-Bold',
                                     marginTop: Spacing / 2
-                                }}>Welcome</Text>
+                                }}>Create an account</Text>
                             </View>
                             <View style={{
                                 marginTop: Spacing * 2,
@@ -96,9 +101,11 @@ function Register(props) {
                                     marginStart: Spacing * 0.5,
                                 }}>{errorEmail}</Text>
                                 <TextInput
+                                    value={email}
                                     placeholder='Email'
                                     placeholderTextColor={colors.placeholder}
                                     style={{
+                                        color: 'black',
                                         fontSize: fontSizes.h6,
                                         fontFamily: 'Poppins-Regular',
                                         backgroundColor: colors.lightPrimary,
@@ -125,9 +132,11 @@ function Register(props) {
                                 }}>
                                     <TextInput
                                         placeholder='Password'
+                                        value={password}
                                         placeholderTextColor={colors.placeholder}
                                         secureTextEntry = {!showPassword}
                                         style={{
+                                            color: 'black',
                                             width: '100%',
                                             fontSize: fontSizes.h6,
                                             fontFamily: 'Poppins-Regular',
@@ -170,11 +179,13 @@ function Register(props) {
                                     flexDirection: 'row'
                                 }}>
                                     <TextInput
+                                        value={confirmPassword}
                                         placeholder='Confirm password'
                                         placeholderTextColor={colors.placeholder}
                                         secureTextEntry ={!showConfirmPassword}
                                         style={{
                                             width: '100%',
+                                            color: 'black',
                                             fontSize: fontSizes.h6,
                                             fontFamily: 'Poppins-Regular',
                                             backgroundColor: colors.lightPrimary,

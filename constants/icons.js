@@ -11,10 +11,12 @@ export default {
     showPass: require('../assets/iconShowPass.png'),
     //Main
     navigationline: require('../assets/iconNavigation.png'),
+    back: require('../assets/iconBack.png'),
     home: require('../assets/iconHome.png'),
     communicateSign: require('../assets/icon_signLanguageCommunicate.png'),
     search: require('../assets/icon_Search.png'),
     filter: require('../assets/iconFilter.png'),
     account: require('../assets/iconAccount.png'),
-    send: require('../assets/iconSend.png')
+    send: require('../assets/iconSend.png'),
+    edit: require('../assets/iconEdit.png')
 }

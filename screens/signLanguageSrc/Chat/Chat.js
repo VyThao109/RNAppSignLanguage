@@ -101,6 +101,7 @@ function Chat(props) {
         flex: 1
     }}>
         <UIHeader
+            navigation={props.navigation}
             title={"Messages"}
             rightIconName={undefined}
             onPressLeftIcon={() => {
