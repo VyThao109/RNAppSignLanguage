@@ -6,7 +6,7 @@ import {
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import 'react-native-gesture-handler'
-import { Login, Register } from '../screens'
+import { EmailVerify, ForgotPass, Login, Register } from '../screens'
 import UITab from "./UITab";
 import SplashScreen from "react-native-splash-screen";
 const Stack = createNativeStackNavigator()
@@ -18,6 +18,8 @@ function App(props) {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="ForgotPass" component={ForgotPass} />
+        <Stack.Screen name="EmailVerify" component={EmailVerify} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="UITab" component={UITab} />
       </Stack.Navigator>

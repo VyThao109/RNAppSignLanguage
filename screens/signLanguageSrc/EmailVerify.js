@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react'
 import {
     ImageBackground,
     KeyboardAvoidingView,
@@ -11,31 +11,21 @@ import {
     Keyboard,
     Image
 } from 'react-native'
+import { UIHeader, UISearchInput } from '../../components';
 import { images, colors, icons, fontSizes } from '../../constants'
 import { screenHeight, screenWidth, Spacing } from '../../utilies/Device';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { isValidEmail } from '../../utilies/Validations'
 
-function Login(props) {
-    const [email, setEmail] = useState('thaonguyenvy109@gmail.com')
-    const [password, setPassword] = useState('123')
-
+function EmailVerify(props) {
+    const [email, setEmail] = useState('')
     const [errorEmail, setErrorEmail] = useState(' ')
-    const [showPassword, setShowPassword] = useState(false)
-
-
-    const isValidationOK = () => email.length > 0 && password.length > 0
-        && isValidEmail(email) == true
-    //navigation
-    const isValidAccount = () => email === "thaonguyenvy109@gmail.com" && password === "123"
-    const toggleShowPassword = () => {
-        setShowPassword(!showPassword)
-    }
+    const isValidationOK = () => email.length > 0 > 0 && isValidEmail(email) == true
 
     const { navigation, route } = props
     //functions of navigate to/back
-    const { navigate, goBack } = navigation
-    return <KeyboardAvoidingView style={{ flex: 1 }}>
+    const { navigate, goBack } = props.navigation
+    return <KeyboardAvoidingView style={{ flex: 1, backgroundColor: 'white' }}>
         <ScrollView contentContainerStyle={{ flex: 1 }} bounces={false}>
             <SafeAreaView style={{
                 paddingVertical: Spacing * 3,
@@ -46,7 +36,7 @@ function Login(props) {
                     style={{
                         width: screenWidth / 2,
                         height: screenHeight / 7,
-                        alignSelf: 'flex-end'
+                        alignSelf: 'flex-end',
                     }}
                     resizeMode='cover' />
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -56,9 +46,28 @@ function Login(props) {
                         backgroundColor: 'white',
                         height: screenHeight * 0.58,
                         borderRadius: Spacing,
-                        justifyContent: 'center',
-                        elevation: 20
+                        justifyContent: 'flex-start',
+                        elevation: 20,
                     }}>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center'
+                        }}>
+                            <TouchableOpacity
+                                onPress={() => goBack()}>
+                                <Image
+                                    source={icons.back}
+                                    style={{
+                                        width: Spacing * 2.5,
+                                        height: Spacing * 2.5,
+                                        tintColor: colors.main,
+                                        marginLeft: Spacing / 2,
+                                        top: Spacing * 1.5
+                                    }}
+                                />
+                            </TouchableOpacity>
+                        </View>
                         <View style={{
                             marginHorizontal: Spacing,
                         }}>
@@ -78,8 +87,16 @@ function Login(props) {
                                     fontSize: fontSizes.h1,
                                     color: colors.main,
                                     fontFamily: 'Poppins-Bold',
-                                    marginTop: Spacing / 2
-                                }}>Welcome back!</Text>
+                                    marginTop: Spacing
+                                }}>Email Verification</Text>
+                                <Text style={{
+                                    paddingTop: Spacing * 0.8,
+                                    fontSize: fontSizes.h6,
+                                    fontFamily: 'Poppins-Regular',
+                                    textAlign: 'center',
+                                    width: "85%",
+                                    color: colors.inactive,
+                                }}>Please enter the new password that send to your email address</Text>
                             </View>
                             <View style={{
                                 marginTop: Spacing * 3,
@@ -92,12 +109,10 @@ function Login(props) {
                                     marginStart: Spacing * 0.5,
                                 }}>{errorEmail}</Text>
                                 <TextInput
-                                    placeholder='Email'
-                                    value={email}
+                                    placeholder='Your new password'
                                     placeholderTextColor={colors.placeholder}
                                     style={{
                                         fontSize: fontSizes.h6,
-                                        color: 'black',
                                         fontFamily: 'Poppins-Regular',
                                         backgroundColor: colors.lightPrimary,
                                         padding: Spacing * 2 / 3,
@@ -113,58 +128,6 @@ function Login(props) {
                                         }
                                         setEmail(text)//meant: gan email = text   
                                     }} />
-                                <View style={{
-                                    flexDirection: 'row'
-                                }}>
-                                    <TextInput
-                                        placeholder='Password'
-                                        value={password}
-                                        placeholderTextColor={colors.placeholder}
-                                        secureTextEntry={!showPassword}
-                                        style={{
-                                            color: 'black',
-                                            fontSize: fontSizes.h6,
-                                            width: '100%',
-                                            fontFamily: 'Poppins-Regular',
-                                            backgroundColor: colors.lightPrimary,
-                                            padding: Spacing * 2 / 3,
-                                            marginTop: Spacing,
-                                            borderRadius: Spacing / 2,
-                                            position: 'relative'
-                                        }}
-                                        onChangeText={(text) => {
-                                            setPassword(text)
-                                        }} />
-                                    <TouchableOpacity 
-                                        onPress={toggleShowPassword}
-                                        style={{
-                                            top: Spacing / 2,
-                                            right: Spacing * 3.5,
-                                            alignSelf: 'center', 
-                                        }}>
-                                        <Image 
-                                            source={showPassword ? icons.showPass : icons.hidePass}
-                                            style={{
-                                                width: Spacing * 2.5, 
-                                                height: Spacing * 2.5, 
-                                                alignContent: 'center',
-                                                tintColor: colors.main
-                                            }}/>
-                                    </TouchableOpacity>
-
-                                </View>
-                            </View>
-                            <View>
-                                <TouchableOpacity 
-                                    onPress={() => navigate('ForgotPass')}>
-                                    <Text style={{
-                                        fontFamily: 'Poppins-SemiBold',
-                                        fontSize: fontSizes.h8,
-                                        color: colors.primary,
-                                        alignSelf: 'flex-end'
-                                    }}>Forgot your password ?</Text>                                    
-                                </TouchableOpacity>
-
                             </View>
                             <TouchableOpacity
                                 disabled={isValidationOK() == false}
@@ -179,7 +142,7 @@ function Login(props) {
                                 style={{
                                     backgroundColor: isValidationOK() == true ? colors.primary : colors.lightBackground,
                                     padding: Spacing * 0.8,
-                                    marginTop: Spacing * 3,
+                                    marginTop: Spacing,
                                     borderRadius: Spacing / 2,
                                     shadowColor: colors.primary,
                                     elevation: 5
@@ -189,12 +152,13 @@ function Login(props) {
                                     fontFamily: 'Poppins-SemiBold',
                                     textAlign: 'center',
                                     color: 'white',
-                                }}>Sign In</Text>
+                                }}>Verify</Text>
                             </TouchableOpacity>
+                            
                             <View style={{
                                 height: 1, width: '80%',
                                 backgroundColor: colors.lightBackground,
-                                marginTop: Spacing * 3,
+                                marginTop: Spacing * 2,
                                 alignSelf: 'center'
                             }} />
                             <View style={{
@@ -208,7 +172,7 @@ function Login(props) {
                                     fontFamily: 'Poppins-Regular',
                                     textAlign: 'center',
                                     color: colors.inactive,
-                                }}>Don't have an account?</Text>
+                                }}>If you don't receive new password!</Text>
                                 <TouchableOpacity
                                     onPress={() => navigate('Register')}
                                     style={{
@@ -221,7 +185,7 @@ function Login(props) {
                                         fontFamily: 'Poppins-SemiBold',
                                         textAlign: 'center',
                                         color: colors.primary,
-                                    }}>Sign Up</Text>
+                                    }}>Resend</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -231,4 +195,4 @@ function Login(props) {
         </ScrollView>
     </KeyboardAvoidingView>
 }
-export default Login
+export default EmailVerify

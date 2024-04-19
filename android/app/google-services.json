@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1064403458321",
+    "firebase_url": "https://signapp-f1a3d-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "signapp-f1a3d",
+    "storage_bucket": "signapp-f1a3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064403458321:android:ee70f0468fd3ae45e154b0",
+        "android_client_info": {
+          "package_name": "com.rnappsignlanguage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgPJk76qHBVMVrmyq4rQt2qehHuU3iL_U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
