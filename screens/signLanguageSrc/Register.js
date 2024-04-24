@@ -5,25 +5,21 @@ import {
     Text,
     TouchableWithoutFeedback,
     View,
-    Keyboard,
     ImageBackground,
     TextInput,
     TouchableOpacity,
-    Image
+    Image,
+    Alert
 } from "react-native"
 import { images, colors, icons, fontSizes } from '../../constants'
 import { screenHeight, screenWidth, Spacing } from '../../utilies/Device';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { isValidEmail } from '../../utilies/Validations'
-import { auth,
-         firebaseDatabase, 
-         createUserWithEmailAndPassword
-        } from '../../config';     
-
+import { auth } from "../../config";
 function Register(props) {
-    const [email, setEmail] = useState('thaonguyenvy109@gmail.com')
-    const [password, setPassword] = useState('123456')
-    const [confirmPassword, setConfirmPassword] = useState('123456')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
     
     const [errorEmail, setErrorEmail] = useState(' ')
     const [showPassword, setShowPassword] = useState(false)
@@ -39,6 +35,15 @@ function Register(props) {
         && isValidEmail(email) == true
     const isConfirmedPass = () => password === confirmPassword
     const isExistAccount = () => email === "thaonguyenvy109@gmail.com"
+
+    const onRegister = () => {
+        auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+            Alert.alert('User account created!')
+        }).catch(error => {
+            Alert.alert(`${error}`)
+        })
+    }
 
     const { navigation, route } = props
     const { navigate, goBack } = navigation
@@ -217,14 +222,15 @@ function Register(props) {
                             </View>
                             <TouchableOpacity
                                 disabled={isValidationOK() == false}
-                                onPress={() => {
-                                    if (!isExistAccount()) {
-                                        isConfirmedPass() ? navigate('Login') : alert('Password confirmation does not match the password.')
-                                    }
-                                    else {
-                                        alert('This email already exists. Please use a different email address.')
-                                    }
-                                }}
+                                // onPress={() => {
+                                //     if (!isExistAccount()) {
+                                //         isConfirmedPass() ? navigate('Login') : alert('Password confirmation does not match the password.')
+                                //     }
+                                //     else {
+                                //         alert('This email already exists. Please use a different email address.')
+                                //     }
+                                // }}
+                                onPress={onRegister}
                                 style={{
                                     backgroundColor: isValidationOK() == true ? colors.primary : colors.lightBackground,
                                     padding: Spacing * 0.8,
