@@ -6,6 +6,7 @@ export default {
 
     //PBL
     main: '#263989',
+    lightInactive: '#CECECE',
     lightMain: 'rgb(181, 196, 254)',
     lightPrimary: 'rgba(54, 70, 167, 0.1)',
     lightBackground: '#D9D9D9',

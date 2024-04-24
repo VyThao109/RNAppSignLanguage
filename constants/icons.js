@@ -14,6 +14,7 @@ export default {
     back: require('../assets/iconBack.png'),
     home: require('../assets/iconHome.png'),
     communicateSign: require('../assets/icon_signLanguageCommunicate.png'),
+    camera: require('../assets/iconCamera.png'),
     search: require('../assets/icon_Search.png'),
     filter: require('../assets/iconFilter.png'),
     account: require('../assets/iconAccount.png'),

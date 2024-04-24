@@ -9,6 +9,7 @@ import 'react-native-gesture-handler'
 import { EmailVerify, ForgotPass, Login, Register } from '../screens'
 import UITab from "./UITab";
 import SplashScreen from "react-native-splash-screen";
+
 const Stack = createNativeStackNavigator()
 function App(props) {
   useEffect(() => {

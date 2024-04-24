@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react"
-import { Chat, FoodList, Messages } from '../screens'
+// import { Chat, Messages } from '../screens/'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Search from "../screens/signLanguageSrc/Search"
 import Account from "../screens/signLanguageSrc/Account"
+import Messages from "../screens/signLanguageSrc/Messages"
+import { Chat } from "../screens/"
 
 
 import { images, colors, icons, fontSizes } from '../constants'
@@ -23,7 +25,7 @@ const screenOptions = ({ route }) => ({
    //  },
    tabBarIcon: ({ focused, color, size }) => {
       let screenName = route.name
-      const iconName = screenName == "Chat" ? icons.communicateSign :
+      const iconName = screenName == "Messages" ? icons.communicateSign :
          (screenName == "Search" ? icons.search : icons.account)
       return <Image source={iconName}
          style={{
@@ -35,8 +37,8 @@ const screenOptions = ({ route }) => ({
 })
 function UITab(props) {
    return <Tab.Navigator screenOptions={screenOptions}>
-      <Tab.Screen name={"Chat"}
-                  component={Chat}
+      <Tab.Screen name={"Messages"}
+                  component={Messages}
                   options={{
                   tabBarLabel: 'Messages'
                   }} />
