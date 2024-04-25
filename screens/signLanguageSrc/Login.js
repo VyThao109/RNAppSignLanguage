@@ -9,16 +9,18 @@ import {
     View,
     TouchableWithoutFeedback,
     Keyboard,
-    Image
+    Image,
+    Alert
 } from 'react-native'
 import { images, colors, icons, fontSizes } from '../../constants'
 import { screenHeight, screenWidth, Spacing } from '../../utilies/Device';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { isValidEmail } from '../../utilies/Validations'
+import { auth } from "../../config";
 
 function Login(props) {
-    const [email, setEmail] = useState('thaonguyenvy109@gmail.com')
-    const [password, setPassword] = useState('123')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
     const [errorEmail, setErrorEmail] = useState(' ')
     const [showPassword, setShowPassword] = useState(false)
@@ -26,14 +28,30 @@ function Login(props) {
 
     const isValidationOK = () => email.length > 0 && password.length > 0
         && isValidEmail(email) == true
-    //navigation
-    const isValidAccount = () => email === "thaonguyenvy109@gmail.com" && password === "123"
+    
     const toggleShowPassword = () => {
         setShowPassword(!showPassword)
     }
 
+    const onLogin = () => {
+        return auth.signInWithEmailAndPassword(email, password)
+            .then(response => {
+                Alert.alert("Login successfully!")
+                // console.log('response: ', response)
+                // const userID = response.user.uid; // Lấy ID người dùng từ response
+                // navigate('UITab', { userID });
+                return true
+            }).catch(error => {
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                    Alert.alert('Email or password is not correct')
+                }
+                console.log('error: ', error)
+                return Promise.resolve(false)
+            })
+    }
+
+    //navigation
     const { navigation, route } = props
-    //functions of navigate to/back
     const { navigate, goBack } = navigation
     return <KeyboardAvoidingView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ flex: 1 }} bounces={false}>
@@ -111,7 +129,7 @@ function Login(props) {
                                         else {
                                             setErrorEmail(' ')
                                         }
-                                        setEmail(text)//meant: gan email = text   
+                                        setEmail(text)
                                     }} />
                                 <View style={{
                                     flexDirection: 'row'
@@ -168,13 +186,12 @@ function Login(props) {
                             </View>
                             <TouchableOpacity
                                 disabled={isValidationOK() == false}
-                                onPress={() => {
-                                    if (isValidAccount()) {
-                                        navigate('UITab');
-                                    }
-                                    else {
-                                        alert('Your email or password is not correct')
-                                    }
+                                onPress={() => { 
+                                    onLogin().then(success => {
+                                        if (success) {
+                                            navigate('UITab');
+                                        }
+                                    });
                                 }}
                                 style={{
                                     backgroundColor: isValidationOK() == true ? colors.primary : colors.lightBackground,

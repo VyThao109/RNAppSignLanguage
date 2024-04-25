@@ -6,5 +6,5 @@ export const isValidEmail = (stringEmail) => {
 }
 
 export const isValidPassword = (stringPassword) => {
-    return stringPassword.length >= 3
+    return stringPassword.length >= 6 || stringPassword.length == 0
 }

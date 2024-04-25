@@ -9,19 +9,40 @@ import {
     View,
     TouchableWithoutFeedback,
     Keyboard,
-    Image
+    Image,
+    Alert
 } from 'react-native'
 import { UIHeader, UISearchInput } from '../../components';
 import { images, colors, icons, fontSizes } from '../../constants'
 import { screenHeight, screenWidth, Spacing } from '../../utilies/Device';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { isValidEmail } from '../../utilies/Validations'
+import { auth } from '../../config';
 
 function ForgotPass(props) {
     const [email, setEmail] = useState('')
     const [errorEmail, setErrorEmail] = useState(' ')
     const isValidationOK = () => email.length > 0 > 0 && isValidEmail(email) == true
 
+    const handleRecoverPassword = () => {
+        if (email.trim() === '') {
+            Alert.alert('Please enter your email');
+            return;
+        }
+
+        return auth.sendPasswordResetEmail(email)
+            .then(() => {
+                Alert.alert('Password reset email has been sent to your email address.');
+                return true
+            })
+            .catch((error) => {
+                if (error.code === 'auth/user-not-found') {
+                    Alert.alert('No user found with this email address.');
+                } else {
+                    Alert.alert('An error occurred. Please try again later.');
+                }
+            });
+    };
     const { navigation, route } = props
     //functions of navigate to/back
     const { navigate, goBack } = props.navigation
@@ -127,12 +148,20 @@ function ForgotPass(props) {
                                         else {
                                             setErrorEmail(' ')
                                         }
-                                        setEmail(text)//meant: gan email = text   
-                                    }} />
+                                        setEmail(text)
+                                    }}
+                                    value={email} />
                             </View>
                             <TouchableOpacity
                                 disabled={isValidationOK() == false}
-                                onPress={() => navigate('Login')}
+                                // onPress={() => navigate('Login')}
+                                onPress={() => { 
+                                    handleRecoverPassword().then(success => {
+                                        if (success) {
+                                            navigate('Login');
+                                        }
+                                    });
+                                }}
                                 style={{
                                     backgroundColor: isValidationOK() == true ? colors.primary : colors.lightBackground,
                                     padding: Spacing * 0.8,

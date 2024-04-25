@@ -35,13 +35,13 @@ const screenOptions = ({ route }) => ({
       </Image>
    },
 })
-function UITab(props) {
+function UITab(route) {
    return <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen name={"Messages"}
                   component={Messages}
                   options={{
                   tabBarLabel: 'Messages'
-                  }} />
+                  }}/>
       <Tab.Screen name={"Search"} component={Search} />
       <Tab.Screen name={"Account"}
                   component={Account}
