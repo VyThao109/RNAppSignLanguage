@@ -9,15 +9,18 @@ import 'react-native-gesture-handler'
 import { EmailVerify, ForgotPass, Login, Register } from '../screens'
 import UITab from "./UITab";
 import SplashScreen from "react-native-splash-screen";
+import { auth } from "../config";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Stack = createNativeStackNavigator()
 function App(props) {
   useEffect(() => {
     SplashScreen.hide()
   }, []);
+  
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={"Login"} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="ForgotPass" component={ForgotPass} />
         <Stack.Screen name="EmailVerify" component={EmailVerify} />

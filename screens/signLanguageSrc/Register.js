@@ -14,7 +14,7 @@ import {
 import { images, colors, icons, fontSizes } from '../../constants'
 import { screenHeight, screenWidth, Spacing } from '../../utilies/Device';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { isValidEmail } from '../../utilies/Validations'
+import { isValidEmail, isValidPassword } from '../../utilies/Validations'
 import { auth } from "../../config";
 function Register(props) {
     const [email, setEmail] = useState('')
@@ -22,6 +22,7 @@ function Register(props) {
     const [confirmPassword, setConfirmPassword] = useState('')
     
     const [errorEmail, setErrorEmail] = useState(' ')
+    const [errorPassword, setErrorPassword] = useState(' ')
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
@@ -31,18 +32,29 @@ function Register(props) {
     const toggleShowConfirmPassword = () => {
         setShowConfirmPassword(!showConfirmPassword)
     }
-    const isValidationOK = () => email.length > 0 && password.length > 0 && confirmPassword.length > 0
-        && isValidEmail(email) == true
-    const isConfirmedPass = () => password === confirmPassword
-    const isExistAccount = () => email === "thaonguyenvy109@gmail.com"
+
+    const isValidationOK = () => email.length > 0 && password.length > 0 && confirmPassword.length > 0  
+                                                && isValidEmail(email) == true && isValidPassword(password) == true 
+       
 
     const onRegister = () => {
-        auth.createUserWithEmailAndPassword(email, password)
-        .then(() => {
-            Alert.alert('User account created!')
-        }).catch(error => {
-            Alert.alert(`${error}`)
-        })
+        if(password !== confirmPassword) {
+            Alert.alert('Password confirmation does not match the password.')
+            return Promise.resolve(false)
+        }
+        return auth.createUserWithEmailAndPassword(email, password)
+            .then(() => {
+                Alert.alert('User\'s account created!')
+                return true
+            }).catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                    Alert.alert('This email already exists. \nPlease use a different email address!')
+                }
+                else {
+                    console.log(`${error}`)
+                }
+                return Promise.resolve(false)
+            })
     }
 
     const { navigation, route } = props
@@ -124,14 +136,15 @@ function Register(props) {
                                         else {
                                             setErrorEmail(' ')
                                         }
-                                        setEmail(text)//meant: gan email = text   
+                                        setEmail(text)
                                     }} />
                                 <Text style={{
                                     color: 'red',
-                                    fontSize: fontSizes.h8,
+                                    fontSize: fontSizes.h7,
                                     fontFamily: 'Poppins-Regular',
                                     marginStart: Spacing * 0.5,
-                                }}> </Text>
+                                    marginTop: Spacing
+                                }}>{errorPassword}</Text>
                                 <View style={{
                                     flexDirection: 'row'
                                 }}>
@@ -147,12 +160,17 @@ function Register(props) {
                                             fontFamily: 'Poppins-Regular',
                                             backgroundColor: colors.lightPrimary,
                                             padding: Spacing * 2 / 3,
-                                            marginTop: Spacing,
                                             borderRadius: Spacing / 2,
                                             position: 'relative'
                                         }}
                                         onChangeText={(text) => {
-                                            setPassword(text)//meant: gan email = text   
+                                            if (isValidPassword(text) == false) {
+                                                setErrorPassword('Password should be at least 6 characters')
+                                            }
+                                            else {
+                                                setErrorPassword(' ')
+                                            }
+                                            setPassword(text)
                                         }} />
                                     <TouchableOpacity
                                         onPress={toggleShowPassword}
@@ -174,7 +192,7 @@ function Register(props) {
 
                                 <Text style={{
                                     color: 'red',
-                                    fontSize: fontSizes.h8,
+                                    fontSize: fontSizes.h7,
                                     fontFamily: 'Poppins-Regular',
                                     marginStart: Spacing * 0.5,
                                 }}> </Text>
@@ -222,15 +240,14 @@ function Register(props) {
                             </View>
                             <TouchableOpacity
                                 disabled={isValidationOK() == false}
-                                // onPress={() => {
-                                //     if (!isExistAccount()) {
-                                //         isConfirmedPass() ? navigate('Login') : alert('Password confirmation does not match the password.')
-                                //     }
-                                //     else {
-                                //         alert('This email already exists. Please use a different email address.')
-                                //     }
-                                // }}
-                                onPress={onRegister}
+                                onPress={() => { 
+                                    onRegister().then(success => {
+                                        if (success) {
+                                            navigate('Login');
+                                        }
+                                    });
+                                }}
+                                // onPress={onRegister}
                                 style={{
                                     backgroundColor: isValidationOK() == true ? colors.primary : colors.lightBackground,
                                     padding: Spacing * 0.8,
