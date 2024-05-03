@@ -153,8 +153,6 @@ function Messages(props) {
                                     color: colors.inactive,
                                     fontFamily: 'Poppins-SemiBold',
                                     fontSize: fontSizes.h6,
-                                    // marginHorizontal: Spacing,
-                                    // marginTop: Spacing
                                 }}>Message you want to communicate: </Text>
                             <Text
                                 style={{
@@ -197,15 +195,6 @@ function Messages(props) {
             >
             </TextInput>
             <TouchableOpacity
-                // onPress={() => {
-                //     if (typedText.trim().length == 0)
-                //         return
-                //     let newMessageObject = {
-                //         isSender: true,
-                //         messageContent: typedText,
-                //         timestamp: (new Date()).getTime(),
-                //     }
-                // }}
                 onPress={handleSendMessage}
                 >
                 <Image
