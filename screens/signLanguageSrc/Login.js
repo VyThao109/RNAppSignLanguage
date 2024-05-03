@@ -189,6 +189,8 @@ function Login(props) {
                                 onPress={() => { 
                                     onLogin().then(success => {
                                         if (success) {
+                                            setEmail('');
+                                            setPassword('')
                                             navigate('UITab');
                                         }
                                     });

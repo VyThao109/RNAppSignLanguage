@@ -57,6 +57,9 @@ function Search(props) {
     const handleSearch = (text) => {
         setSearchKeyword(text);
         setAutocompleteSuggestions([]);
+        setShowText(false);
+        setIsVideoVisible(false);
+        updateAutocompleteSuggestions(text);
         if (keywordLowerCase.length > 0) {
             setShowText(true);
         }
@@ -195,7 +198,7 @@ function Search(props) {
                     width: screenWidth - Spacing * 5.2,
                     margin: Spacing
                 }}>
-                    {!isVideoVisible ? (
+                    {/* {!isVideoVisible ? (
                         <Image
                             source={images.preSearchResult}
                             style={{
@@ -206,8 +209,19 @@ function Search(props) {
                         <VideoPlayer
                             // controls={true}
                             source={{ uri: videoUrl }} />
+                    )} */}
+                    {videoUrl ? ( // Kiểm tra xem videoUrl có giá trị không trước khi render VideoPlayer
+                        <VideoPlayer
+                            source={{ uri: videoUrl }} />
+                    ) : (
+                        <Image
+                            source={images.preSearchResult}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                resizeMode: 'contain'
+                            }} />
                     )}
-
                 </View>
                 {showText && (
                     <Text style={{
