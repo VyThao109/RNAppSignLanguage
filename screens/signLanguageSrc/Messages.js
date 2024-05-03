@@ -13,15 +13,35 @@ import {
 import { colors, icons, fontSizes } from '../../constants';
 import UIHeader from '../../components/UIHeader';
 import { Spacing, screenHeight, screenWidth } from '../../utilies/Device';
-
+import { db,firebaseDatabase } from "../../config";
+import { onValue, ref } from "firebase/database";
 
 function Messages(props) {
     const [typedText, setTypedText] = useState('');
     const [messages, setMessages] = useState([]);
 
     const scrollViewRef = useRef(null);
+    const [messageFB, setMessageFB] = useState([])
 
     useEffect(() => {
+        const startCountRef = ref(firebaseDatabase, 'Messages/');
+        onValue(startCountRef, (snapshot) => {
+            const data = snapshot.val();
+            const newPosts = Object.keys(data).map(key => ({
+                id: key,
+                ...data[key]
+            }));
+            // Sử dụng map để lấy các giá trị Content
+            const contentArray = newPosts.map(newPost => newPost.Content);
+
+            // Ghép các giá trị Content thành một chuỗi sử dụng join
+            const Result = contentArray.join(', ');
+
+            console.log(Result);
+            //console.log(newPosts);
+            setMessageFB(Result);
+        });
+        console.log(messageFB);
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             scrollViewRef.current.scrollToEnd({ animated: true });
         });
@@ -118,10 +138,7 @@ function Messages(props) {
                             fontSize: fontSizes.h5,
                             marginBottom: Spacing,
                             marginHorizontal: Spacing,
-                        }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam felis, finibus a dapibus in, ornare nec sem
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam felis, finibus a dapibus in, ornare nec sem
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam felis, finibus a dapibus in, ornare nec sem
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam felis, finibus a dapibus in, ornare nec sem</Text>
+                        }}>{messageFB}</Text>
                     </ScrollView>
                 </View>
             </TouchableWithoutFeedback>
