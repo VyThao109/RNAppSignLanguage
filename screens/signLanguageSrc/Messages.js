@@ -16,6 +16,9 @@ import { Spacing, screenHeight, screenWidth } from '../../utilies/Device';
 
 
 function Messages(props) {
+    const [typedText, setTypedText] = useState('');
+    const [messages, setMessages] = useState([]);
+
     const scrollViewRef = useRef(null);
 
     useEffect(() => {
@@ -27,6 +30,21 @@ function Messages(props) {
             keyboardDidShowListener.remove();
         };
     }, []);
+    const handleSendMessage = () => {
+        if (typedText.trim().length === 0) return;
+
+        const newMessageObject = {
+            isSender: true,
+            messageContent: typedText,
+            timestamp: new Date().getTime(),
+        };
+
+        // Thêm tin nhắn mới vào danh sách tin nhắn
+        setMessages([...messages, newMessageObject]);
+
+        // Xóa nội dung tin nhắn sau khi gửi
+        setTypedText('');
+    };
     return <View style={{
         backgroundColor: 'white',
         flex: 1
@@ -60,18 +78,22 @@ function Messages(props) {
                     fontFamily: 'Poppins-Regular',
                     fontSize: fontSizes.h6,
                     color: '#686868'
-                }}>Tap to open camera</Text>
+                }}>Tap to open stream</Text>
             </TouchableOpacity>
         </View>
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <KeyboardAvoidingView 
+            style={{ flex: 1 }} 
+            behavior='padding'
+            keyboardVerticalOffset={-200}>
             <ScrollView  
                 ref={scrollViewRef}
                 style={{ flex: 1}}
                 contentContainerStyle={{ flexGrow: 1 }}
-                keyboardShouldPersistTaps="handled">
+                keyboardShouldPersistTaps="handled"
+                contentInsetAdjustmentBehavior="automatic">
             {/* AI */}
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={{ height: screenHeight / 5, width: screenWidth * 0.9 }}>
+                <View style={{ height: screenHeight / 4.5, width: '100%'}}>
                     <ScrollView
                         style={{
                             margin: Spacing,
@@ -96,7 +118,10 @@ function Messages(props) {
                             fontSize: fontSizes.h5,
                             marginBottom: Spacing,
                             marginHorizontal: Spacing,
-                        }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam felis, finibus a dapibus in, ornare nec sem.</Text>
+                        }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam felis, finibus a dapibus in, ornare nec sem
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam felis, finibus a dapibus in, ornare nec sem
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam felis, finibus a dapibus in, ornare nec sem
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam felis, finibus a dapibus in, ornare nec sem</Text>
                     </ScrollView>
                 </View>
             </TouchableWithoutFeedback>
@@ -111,8 +136,8 @@ function Messages(props) {
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View
                         style={{
-                            height: screenHeight / 5.1,
-                            width: screenWidth * 0.9,
+                            height: screenHeight / 4.5,
+                            width: '100%',
                             backgroundColor: colors.lightInactive,
                             borderRadius: Spacing,
                             elevation: Spacing* 2
@@ -124,16 +149,20 @@ function Messages(props) {
                             contentContainerStyle={{
                                 paddingBottom: Spacing / 2,
                             }}>
+                                <Text style={{
+                                    color: colors.inactive,
+                                    fontFamily: 'Poppins-SemiBold',
+                                    fontSize: fontSizes.h6,
+                                    // marginHorizontal: Spacing,
+                                    // marginTop: Spacing
+                                }}>Message you want to communicate: </Text>
                             <Text
                                 style={{
                                     color: 'black',
                                     fontFamily: 'Poppins-Regular',
                                     fontSize: fontSizes.h5,
                                 }}>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam felis, finibus a dapibus in, ornare nec sem.
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam felis, finibus a dapibus in, ornare nec sem.
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam felis, finibus a dapibus in, ornare nec sem.
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam felis, finibus a dapibus in, ornare nec sem.
+                                {messages.length > 0 ? messages[messages.length - 1].messageContent : ''}
                             </Text>
                         </ScrollView>
                     </View>
@@ -142,8 +171,6 @@ function Messages(props) {
             </ScrollView>
 
         </KeyboardAvoidingView>
-
-
         <View style={{
             height: 50,
             backgroundColor: 'white',
@@ -156,9 +183,6 @@ function Messages(props) {
             alignItems: 'center'
         }}>
             <TextInput
-                // onChangeText={(typedText) => {
-                //     setTypeText(typedText)
-                // }}
                 style={{
                     color: 'black',
                     fontFamily: 'Poppins-Regular',
@@ -168,19 +192,22 @@ function Messages(props) {
                 }}
                 placeholder='Write message'
                 placeholderTextColor={colors.placeholder}
-            // value={typedText}
+                value={typedText}
+                onChangeText={setTypedText}
             >
             </TextInput>
             <TouchableOpacity
-                onPress={() => {
-                    if (typedText.trim().length == 0)
-                        return
-                    let newMessageObject = {
-                        isSender: true,
-                        messageContent: typedText,
-                        timestamp: (new Date()).getTime(),
-                    }
-                }}>
+                // onPress={() => {
+                //     if (typedText.trim().length == 0)
+                //         return
+                //     let newMessageObject = {
+                //         isSender: true,
+                //         messageContent: typedText,
+                //         timestamp: (new Date()).getTime(),
+                //     }
+                // }}
+                onPress={handleSendMessage}
+                >
                 <Image
                     source={icons.send}
                     style={{
