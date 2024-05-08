@@ -13,6 +13,7 @@ export default {
     navigationline: require('../assets/iconNavigation.png'),
     back: require('../assets/iconBack.png'),
     close: require('../assets/iconClose.png'),
+    cancel: require('../assets/iconCancel.png'),
     home: require('../assets/iconHome.png'),
     communicateSign: require('../assets/icon_signLanguageCommunicate.png'),
     camera: require('../assets/iconCamera.png'),
