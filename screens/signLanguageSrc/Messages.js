@@ -13,16 +13,15 @@ import {
 import { colors, icons, fontSizes } from '../../constants';
 import UIHeader from '../../components/UIHeader';
 import { Spacing, screenHeight, screenWidth } from '../../utilies/Device';
-import { db,firebaseDatabase } from "../../config";
+import { db, firebaseDatabase } from "../../config";
 import { onValue, ref } from "firebase/database";
 
 function Messages(props) {
     const [typedText, setTypedText] = useState('');
     const [messages, setMessages] = useState([]);
-
-    const scrollViewRef = useRef(null);
     const [messageFB, setMessageFB] = useState([])
-
+    const scrollViewRef = useRef();
+    const scrollViewMsgRef = useRef();
     useEffect(() => {
         const startCountRef = ref(firebaseDatabase, 'Messages/');
         onValue(startCountRef, (snapshot) => {
@@ -35,15 +34,20 @@ function Messages(props) {
             const contentArray = newPosts.map(newPost => newPost.Content);
 
             // Ghép các giá trị Content thành một chuỗi sử dụng join
-            const Result = contentArray.join(', ');
+            const Result = contentArray.join('\n');
 
-            console.log(Result);
+            // console.log(Result);
             //console.log(newPosts);
-            setMessageFB(Result);
+            if(Result.trim().length > 0) {
+                setMessageFB(Result);
+                if (scrollViewMsgRef.current) {
+                    scrollViewMsgRef.current.scrollToEnd({ animated: true });
+                }                
+            }
         });
-        console.log(messageFB);
+        // console.log(messageFB);
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-            scrollViewRef.current.scrollToEnd({ animated: true });
+            scrollViewMsgRef.current.scrollToEnd({ animated: true });
         });
 
         return () => {
@@ -58,13 +62,17 @@ function Messages(props) {
             messageContent: typedText,
             timestamp: new Date().getTime(),
         };
-
-        // Thêm tin nhắn mới vào danh sách tin nhắn
         setMessages([...messages, newMessageObject]);
-
-        // Xóa nội dung tin nhắn sau khi gửi
         setTypedText('');
     };
+    // useEffect(() => {
+    //     if (scrollViewRef.current) {
+    //         scrollViewRef.current.scrollToEnd({ animated: true });
+    //     }
+    // }, [messageFB]);
+    const handleContentSizeChange = (contentWidth, contentHigh) => {
+        scrollViewRef.current.scrollToEnd({ animated: true })
+    }
     return <View style={{
         backgroundColor: 'white',
         flex: 1
@@ -101,47 +109,44 @@ function Messages(props) {
                 }}>Tap to open stream</Text>
             </TouchableOpacity>
         </View>
-        <KeyboardAvoidingView 
-            style={{ flex: 1 }} 
-            behavior='padding'
-            keyboardVerticalOffset={-200}>
-            <ScrollView  
-                ref={scrollViewRef}
-                style={{ flex: 1}}
-                contentContainerStyle={{ flexGrow: 1 }}
-                keyboardShouldPersistTaps="handled"
-                contentInsetAdjustmentBehavior="automatic">
+        <ScrollView
+            ref={scrollViewRef}
+            style={{ flex: 1 }}
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
+            contentInsetAdjustmentBehavior="automatic"
+            onContentSizeChange={handleContentSizeChange}>
             {/* AI */}
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={{ height: screenHeight / 4.5, width: '100%'}}>
-                    <ScrollView
-                        style={{
-                            margin: Spacing,
-                            backgroundColor: colors.main,
-                            borderRadius: Spacing,
-                            elevation: Spacing * 2
-                        }}
-                        contentContainerStyle={{
-                            justifyContent: 'flex-start',
-                            paddingBottom: Spacing / 2
-                        }}>
-                        <Text style={{
-                            color: colors.lightMain,
-                            fontFamily: 'Poppins-SemiBold',
-                            fontSize: fontSizes.h6,
-                            marginHorizontal: Spacing,
-                            marginTop: Spacing
-                        }}>Sign language translate: </Text>
-                        <Text style={{
-                            color: 'white',
-                            fontFamily: 'Poppins-Regular',
-                            fontSize: fontSizes.h5,
-                            marginBottom: Spacing,
-                            marginHorizontal: Spacing,
-                        }}>{messageFB}</Text>
-                    </ScrollView>
-                </View>
-            </TouchableWithoutFeedback>
+            <View style={{ height: screenHeight / 4.5, width: '100%' }}>
+                <ScrollView
+                    ref={scrollViewMsgRef}
+                    style={{
+                        margin: Spacing,
+                        backgroundColor: colors.main,
+                        borderRadius: Spacing,
+                        elevation: Spacing * 2
+                    }}
+                    contentContainerStyle={{
+                        justifyContent: 'flex-start',
+                        paddingBottom: Spacing / 2
+                    }}
+                    onContentSizeChange={handleContentSizeChange}>
+                    <Text style={{
+                        color: colors.lightMain,
+                        fontFamily: 'Poppins-SemiBold',
+                        fontSize: fontSizes.h6,
+                        marginHorizontal: Spacing,
+                        marginTop: Spacing
+                    }}>Sign language translate: </Text>
+                    <Text style={{
+                        color: 'white',
+                        fontFamily: 'Poppins-Regular',
+                        fontSize: fontSizes.h5,
+                        marginBottom: Spacing,
+                        marginHorizontal: Spacing,
+                    }}>{messageFB}</Text>
+                </ScrollView>
+            </View>
             {/* User */}
             <View
                 style={{
@@ -150,42 +155,40 @@ function Messages(props) {
                     paddingHorizontal: Spacing,
                     marginTop: Spacing
                 }}>
-                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <View
+                <View
+                    style={{
+                        height: screenHeight / 4.5,
+                        width: '100%',
+                        backgroundColor: colors.lightInactive,
+                        borderRadius: Spacing,
+                        elevation: Spacing * 2
+                    }}>
+                    <ScrollView
                         style={{
-                            height: screenHeight / 4.5,
-                            width: '100%',
-                            backgroundColor: colors.lightInactive,
-                            borderRadius: Spacing,
-                            elevation: Spacing* 2
+                            margin: Spacing,
+                        }}
+                        contentContainerStyle={{
+                            paddingBottom: Spacing / 2,
                         }}>
-                        <ScrollView
+                        <Text style={{
+                            color: colors.inactive,
+                            fontFamily: 'Poppins-SemiBold',
+                            fontSize: fontSizes.h6,
+                        }}>Messages to say: </Text>
+                        <Text
                             style={{
-                                margin: Spacing,
-                            }}
-                            contentContainerStyle={{
-                                paddingBottom: Spacing / 2,
+                                color: 'black',
+                                fontFamily: 'Poppins-Regular',
+                                fontSize: fontSizes.h5,
                             }}>
-                                <Text style={{
-                                    color: colors.inactive,
-                                    fontFamily: 'Poppins-SemiBold',
-                                    fontSize: fontSizes.h6,
-                                }}>Message you want to communicate: </Text>
-                            <Text
-                                style={{
-                                    color: 'black',
-                                    fontFamily: 'Poppins-Regular',
-                                    fontSize: fontSizes.h5,
-                                }}>
-                                {messages.length > 0 ? messages[messages.length - 1].messageContent : ''}
-                            </Text>
-                        </ScrollView>
-                    </View>
-                </TouchableWithoutFeedback>
-            </View>                
-            </ScrollView>
+                            {messages.length > 0 ? messages[messages.length - 1].messageContent : ''}
+                        </Text>
+                    </ScrollView>
+                </View>
+            </View>
+        </ScrollView>
 
-        </KeyboardAvoidingView>
+        {/* </KeyboardAvoidingView> */}
         <View style={{
             height: 50,
             backgroundColor: 'white',
@@ -213,7 +216,7 @@ function Messages(props) {
             </TextInput>
             <TouchableOpacity
                 onPress={handleSendMessage}
-                >
+            >
                 <Image
                     source={icons.send}
                     style={{
