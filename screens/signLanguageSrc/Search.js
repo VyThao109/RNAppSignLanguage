@@ -215,12 +215,8 @@ function Search(props) {
                             source={{ uri: videoUrl }}
                             disableBack={true}
                             disableFullscreen={true}
-                            // onEnd={() => {
-                            //     this.setState({ progress: 1 }); // Cập nhật tiến trình lên 100% khi video kết thúc
-                            // }}
-                            // ref={(ref) => {
-                            //     this.player = ref;
-                            // }}
+                            disableSeekbar={true}
+                            disableVolume={true}
                             />
                     ) : (
                         <Image
