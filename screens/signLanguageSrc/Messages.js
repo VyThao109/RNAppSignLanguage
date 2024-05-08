@@ -38,9 +38,11 @@ function Messages(props) {
 
             // console.log(Result);
             //console.log(newPosts);
-            setMessageFB(Result);
-            if (scrollViewMsgRef.current) {
-                scrollViewMsgRef.current.scrollToEnd({ animated: true });
+            if(Result.trim().length > 0) {
+                setMessageFB(Result);
+                if (scrollViewMsgRef.current) {
+                    scrollViewMsgRef.current.scrollToEnd({ animated: true });
+                }                
             }
         });
         // console.log(messageFB);

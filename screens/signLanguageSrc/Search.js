@@ -13,11 +13,11 @@ import { Spacing, screenHeight, screenWidth } from "../../utilies/Device";
 import Video from "react-native-video";
 import VideoPlayer from 'react-native-video-controls';
 import { storage, firebaseDatabase } from "../../config";
-import { onValue, ref } from "firebase/database";
+import { onValue, ref, get } from "firebase/database";
 
 function Search(props) {
     //for search
-    const [searchKeyword, setSearchKeyword] = useState(' ')
+    const [searchKeyword, setSearchKeyword] = useState('')
     const [isVideoVisible, setIsVideoVisible] = useState(false);
     const [showText, setShowText] = useState(false);
 
@@ -27,33 +27,33 @@ function Search(props) {
     const [videoUrl, setVideoUrl] = useState('')
     const [autocompleteSuggestions, setAutocompleteSuggestions] = useState([])
 
+    const [key, setKey] = useState(0)
     //handle
     const keywordLowerCase = searchKeyword.toLowerCase().trim();
+
     useEffect(() => {
-        // const db = getDatabase()
         const videosRef = ref(firebaseDatabase, 'Videos');
         onValue(videosRef, (snapshot) => {
             const videosData = snapshot.val();
             if (videosData) {
-                setVideos(Object.values(videosData))
-                // console.log(Object.values(videosData))
+                setVideos(Object.values(videosData));
             } else {
-                console.log('No data available')
+                console.log('No data available');
             }
         }, (error) => {
             console.error('Error fetching data: ', error);
+            setDataLoaded(true);
         });
     }, []);
+    
     const updateAutocompleteSuggestions = (text) => {
-        if (text.length > 0) {
-            const fiteredSuggestions = videos.filter(video => video.Name.toLowerCase().includes(text.toLowerCase()))
-            setAutocompleteSuggestions(fiteredSuggestions)
-        }
-        else {
+        if (text.trim().length > 0) {
+            const filteredSuggestions = videos.filter(video => video.Name.toLowerCase().includes(text.toLowerCase()))
+            setAutocompleteSuggestions(filteredSuggestions);
+        } else {
             setAutocompleteSuggestions([]);
         }
     }
-
     const handleSearch = (text) => {
         setSearchKeyword(text);
         setAutocompleteSuggestions([]);
@@ -210,9 +210,18 @@ function Search(props) {
                             // controls={true}
                             source={{ uri: videoUrl }} />
                     )} */}
-                    {videoUrl ? ( // Kiểm tra xem videoUrl có giá trị không trước khi render VideoPlayer
+                    {videoUrl && isVideoVisible ? ( // Kiểm tra xem videoUrl có giá trị không trước khi render VideoPlayer
                         <VideoPlayer
-                            source={{ uri: videoUrl }} />
+                            source={{ uri: videoUrl }}
+                            disableBack={true}
+                            disableFullscreen={true}
+                            // onEnd={() => {
+                            //     this.setState({ progress: 1 }); // Cập nhật tiến trình lên 100% khi video kết thúc
+                            // }}
+                            // ref={(ref) => {
+                            //     this.player = ref;
+                            // }}
+                            />
                     ) : (
                         <Image
                             source={images.preSearchResult}
