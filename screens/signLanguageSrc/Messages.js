@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { WebView } from 'react-native-webview';
 import {
     View,
     ScrollView,
@@ -19,12 +20,15 @@ import { onValue, ref } from "firebase/database";
 function Messages(props) {
     const [typedText, setTypedText] = useState('');
     const [messages, setMessages] = useState([]);
+    const [onCamera, setOnCamera] = useState(false)
 
     const scrollViewRef = useRef(null);
     const [messageFB, setMessageFB] = useState([])
+    const [urlStream, setUrlStream] = useState('youtube.com')
 
     useEffect(() => {
         const startCountRef = ref(firebaseDatabase, 'Messages/');
+        const startCountRefIP = ref(firebaseDatabase, 'IP/');
         onValue(startCountRef, (snapshot) => {
             const data = snapshot.val();
             const newPosts = Object.keys(data).map(key => ({
@@ -41,7 +45,11 @@ function Messages(props) {
             //console.log(newPosts);
             setMessageFB(Result);
         });
-        console.log(messageFB);
+        onValue(startCountRefIP, (snapshot) => {
+            const data = snapshot.val();
+            console.log(data);
+            setUrlStream(data);
+        });
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             scrollViewRef.current.scrollToEnd({ animated: true });
         });
@@ -81,7 +89,9 @@ function Messages(props) {
             width: '100%',
             height: screenHeight / 3.5
         }}>
-            <TouchableOpacity style={{
+            {!onCamera ? (<TouchableOpacity
+                onPress={() => setOnCamera(!onCamera)}
+                style={{
                 backgroundColor: colors.lightInactive,
                 width: '100%', height: '100%',
                 justifyContent: 'center',
@@ -98,8 +108,36 @@ function Messages(props) {
                     fontFamily: 'Poppins-Regular',
                     fontSize: fontSizes.h6,
                     color: '#686868'
-                }}>Tap to open stream</Text>
-            </TouchableOpacity>
+                }}>Tap to open stream</Text> 
+            </TouchableOpacity>)
+            : (
+                <>
+                    <WebView
+                    source={{ uri: urlStream }}
+                    style={{ marginTop: 20 }}
+                    /> 
+                    <TouchableOpacity
+                        onPress={() => setOnCamera(!onCamera)}
+                        style={{
+                        position: 'absolute',
+                        top: 10,
+                        right: 10,
+                        backgroundColor: 'transparent'
+                        }}>
+                        {/* <Text style={{ fontSize: 30, color: '#686868' }}>Close</Text> */}
+                        <Image
+                            source={icons.cancel}
+                            style={{
+                                width: Spacing * 2,
+                                height: Spacing * 2,
+                                alignSelf: 'flex-end',
+                                tintColor: '#BD2F33',
+                                top: -Spacing
+                            }} /> 
+                    </TouchableOpacity>
+                </>
+            ) }
+            
         </View>
         <KeyboardAvoidingView 
             style={{ flex: 1 }} 
