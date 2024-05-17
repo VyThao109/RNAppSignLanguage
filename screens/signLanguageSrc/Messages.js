@@ -15,7 +15,7 @@ import { colors, icons, fontSizes } from '../../constants';
 import UIHeader from '../../components/UIHeader';
 import { Spacing, screenHeight, screenWidth } from '../../utilies/Device';
 import { db, firebaseDatabase } from "../../config";
-import { onValue, ref } from "firebase/database";
+import { onValue, ref, remove, set } from "firebase/database";
 
 function Messages(props) {
     const [typedText, setTypedText] = useState('');
@@ -81,6 +81,16 @@ function Messages(props) {
     const handleContentSizeChange = (contentWidth, contentHigh) => {
         scrollViewRef.current.scrollToEnd({ animated: true })
     }
+
+    const clearMessages = () => {
+        const messagesRef = ref(firebaseDatabase, 'Messages/');
+        set(messagesRef, 'clear').then(() => {
+            setMessageFB(''); // Clear local state
+        }).catch((error) => {
+            console.error("Error clearing messages: ", error);
+        });
+    };
+
     return <View style={{
         backgroundColor: 'white',
         flex: 1
@@ -156,6 +166,18 @@ function Messages(props) {
             onContentSizeChange={handleContentSizeChange}>
             {/* AI */}
             <View style={{ height: screenHeight / 4.5, width: '100%' }}>
+            {/* Close Button */}
+                <TouchableOpacity
+                    onPress={() => clearMessages()}
+                    style={{
+                    position: 'absolute',
+                    top: 30,
+                    right: 20,
+                    zIndex: 1,
+                    backgroundColor: 'transparent'
+                }}>
+                    <Text style={{ fontSize: 15, color: colors.main, backgroundColor: '#ffffff', padding: '10px', }}>Clear</Text>
+                </TouchableOpacity>
                 <ScrollView
                     ref={scrollViewMsgRef}
                     style={{
