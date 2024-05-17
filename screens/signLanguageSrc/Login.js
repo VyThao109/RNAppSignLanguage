@@ -42,6 +42,9 @@ function Login(props) {
                 // navigate('UITab', { userID });
                 return true
             }).catch(error => {
+                if (error.code === 'auth/network-request-failed') {
+                    Alert.alert('Please check your internet connection and try again!!')
+                }
                 if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
                     Alert.alert('Email or password is not correct')
                 }

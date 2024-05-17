@@ -216,7 +216,6 @@ function Search(props) {
                             disableBack={true}
                             disableFullscreen={true}
                             disableSeekbar={true}
-                            disableVolume={true}
                             />
                     ) : (
                         <Image
